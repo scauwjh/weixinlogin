@@ -1,5 +1,9 @@
 package com.weixin.login.api;
 
+import java.util.List;
+
+import com.weixin.login.core.beans.ImageText;
+
 public interface WeixinLoginAPI {
 	
 	//-------------------------------------------
@@ -44,11 +48,14 @@ public interface WeixinLoginAPI {
 	public String getFans(Integer count);
 	
 	/**
-	 * 获取素材
-	 * @param count 可以设置无限
+	 * 获取素材（Constant.IMAGE_TYPE）
+	 * @param messageType
+	 * @param begin
+	 * @param count
 	 * @return
 	 */
-	public String getSources(Integer count);
+	public String getSources(Integer messageType, Integer begin,
+			Integer count);
 	
 	/**
 	 * 获取消息（文字，图文等等）
@@ -101,13 +108,32 @@ public interface WeixinLoginAPI {
 			Integer messageType);
 	
 	/**
+	 * <p>群发接口</p>
+	 * <p>每天限发一条</p>
+	 * <p>如果提示需要绑定公众号，请提醒用户手动去微信公众平台绑定</p>
+	 * @param content
+	 * @param messageType
+	 * @return
+	 */
+	public String sendMessageToAll(String content, Integer messageType);
+	
+	/**
 	 * 绑定服务器
 	 * @param url 自己服务器跟微信交互的接口
 	 * @return
 	 */
-	public Boolean bindServer(String url);
+	public String bindServer(String url);
 	
 	
+	/**
+	 * 更新或者修改图文
+	 * @param appMsgId (null 为新建，否则为更新)
+	 * @param list
+	 * @return
+	 */
+	public String saveOrUpdateImageText(Long appMsgId, List<ImageText> list);
+	
+	public String uploadImage();
 	
 	//-------------------------------------------
 	//------------ getter or setter  ------------

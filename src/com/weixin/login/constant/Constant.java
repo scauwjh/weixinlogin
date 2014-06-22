@@ -19,9 +19,9 @@ public class Constant {
 	public static final Integer I_UPDATE = 1; // 更新
 	public static final Integer I_DO_NOTHING = 0; // 不做任何动作
 	
-	public static final Integer I_MESSAGE_TYPE = 1; // 文字
-	public static final Integer I_PICTURE_TYPE = 2; // 图片
-	public static final Integer I_MESSAGE_PICTURE_TYPE = 10; // 图文
+	public static final Integer TEXT_TYPE = 1; // 文字
+	public static final Integer IMAGE_TYPE = 2; // 图片
+	public static final Integer IMAGE_TEXT_TYPE = 10; // 图文
 	
 	public static final Integer I_LOGIN_FAILED = -1; // 登录失败
 	public static final Integer I_LOGIN_SUCCEED = 0; // 登录成功

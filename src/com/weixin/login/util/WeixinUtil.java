@@ -18,15 +18,22 @@ public class WeixinUtil {
 	public static final String NEW_MESSAGE_COUNT = "https://mp.weixin.qq.com/cgi-bin/getnewmsgnum?token=[TOKEN]&lastmsgid=[LASTMSGID]&t=ajax-getmsgnum&lang=zh_CN";
 	// replace [TOKEN] [COUNT]
 	public static final String FANS_URL = "https://mp.weixin.qq.com/cgi-bin/contactmanage?t=user/index&pagesize=[COUNT]&pageidx=0&type=0&token=[TOKEN]&lang=zh_CN";
-	// replace [TOKEN] [COUNT]
-	public static final String SOURCES_URL = "https://mp.weixin.qq.com/cgi-bin/appmsg?begin=0&count=[COUNT]&t=media/appmsg_list&type=10&action=list&token=[TOKEN]&lang=zh_CN";
 	// post content
 	public static final String SEND_MESSAGE_PAGE = "https://mp.weixin.qq.com/cgi-bin/singlesendpage?tofakeid=[FAKEID]&t=message/send&action=index&token=[TOKEN]&lang=zh_CN";
-	public static final String SEND_MESSAGE_URL = "https://mp.weixin.qq.com/cgi-bin/singlesend";
+	public static final String SEND_MESSAGE = "https://mp.weixin.qq.com/cgi-bin/singlesend";
 	//bind server
 	public static final String SWITCH_MODEL = "https://mp.weixin.qq.com/misc/skeyform?form=advancedswitchform&lang=zh_CN";
 	public static final String BIND_SERVER = "https://mp.weixin.qq.com/advanced/callbackprofile?t=ajax-response&token=[TOKEN]&lang=zh_CN";
-	
+	//mass message
+	public static final String MASS_MESSAGE = "https://mp.weixin.qq.com/cgi-bin/masssend";
+	// create pircutre message
+	public static final String OPERATE_APPMSG = "https://mp.weixin.qq.com/cgi-bin/operate_appmsg";
+	// 获取图片素材 replace [TOKEN] [COUNT] [BEGIN]
+	public static final String IMAGE_SOURCES = "https://mp.weixin.qq.com/cgi-bin/filepage?type=2&begin=[BEGIN]&count=[COUNT]&t=media/list&token=[TOKEN]&lang=zh_CN";
+	// 获取图文素材 replace [TOKEN] [COUNT] [BEGIN]
+	public static final String IMAGE_TEXT_SOURCE = "https://mp.weixin.qq.com/cgi-bin/appmsg?begin=[BEGIN]&count=[COUNT]&t=media/appmsg_list&type=10&action=list&token=[TOKEN]&lang=zh_CN";
+	// 文件上传 [TICKET_ID] [TICKET] [TOKEN]
+	public static final String FILE_UPLOAD = "https://mp.weixin.qq.com/cgi-bin/filetransfer?action=upload_material&f=json&ticket_id=[TICKET_ID]&ticket=[TICKET]&token=[TOKEN]&lang=zh_CN";
 	
 	/**
 	 * @param content

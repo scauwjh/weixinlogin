@@ -1,33 +1,32 @@
 package com.weixin.login.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import net.sf.json.JSONObject;
 
+//import net.sf.json.JSONObject;
+
 import com.weixin.login.api.WeixinLoginAPI;
 import com.weixin.login.api.impl.WeixinLogin;
+import com.weixin.login.constant.Constant;
+import com.weixin.login.core.beans.ImageText;
 
 public class WeixinLoginTest {
 	
+	private static WeixinLoginAPI login;
+	
 	/* main 测试方法 */
 	public static void main(String[] args) {
+		String verifyCodeImg = "D:\\verifyCodeImg.jpg";
 		String user = "978861379@qq.com";
 		String password = "20041123op.com";
-//		String user = "scau_network@126.com";
-//		String pass = "1qazse432";
-		String verifyCodeImg = "D:\\verifyCodeImg.jpg";
+//		user = "scau_network@126.com";
+//		password = "1qazse432";
 		
-//		String fakeId = "324178320";
-//		String picMsgId = "200588979";
-//		String headImg = "D:\\headImg.jpg";
-//		String recImg = "D:\\recImg.jpg";
-//		String mode = "large";
-//		String lastMsgId = "200497833";
-//		String retContent = null;
-//		String retUrl = null;
-//		Integer newMsgCount = null;
 		Scanner input = new Scanner(System.in);
-		WeixinLoginAPI login = new WeixinLogin();
+		login = new WeixinLogin();
 		login.login(user, MD5.getMD5(password));
 		while (login.getErrCode() == -6) {
 			login.getVerifyCode(verifyCodeImg);
@@ -41,40 +40,118 @@ public class WeixinLoginTest {
 			input.close();
 			return;
 		}
+		/*** to do some test ***/
+		uploadImage();
+//		getImageSources(0, 9999999);
+//		getImageTextSources(0, 9999999);
+//		saveImageText();
+		
+		input.close();
+	}
+	
+	public static void uploadImage() {
+		login.uploadImage();
+	}
+	
+	public static void saveImageText() {
+		Long appMsgId = null;
+		List<ImageText> list = new ArrayList<ImageText>();
+		for (int i = 0; i < 2; i++) {
+			ImageText it = new ImageText();
+			it.setAuthor("wjh.ide");
+			it.setContent("<span style=\"color:red\">图文" + i + "</span>");
+			it.setDigest("这是摘要");
+			it.setFileid("201127195");
+			it.setShow_cover_pic("1");
+			it.setSourceurl("http://www.baidu.com");
+			it.setTitle("测试图文");
+			list.add(it);
+		}
+		String message = login.saveOrUpdateImageText(appMsgId, list);
+		System.out.println(message);
+	}
+	
+	public static void updateImageText() {
+		Long appMsgId = null;
+		List<ImageText> list = new ArrayList<ImageText>();
+		for (int i = 0; i < 2; i++) {
+			ImageText it = new ImageText();
+			it.setAuthor("wjh.ide");
+			it.setContent("<span style=\"color:red\">图文" + i + "</span>");
+			it.setDigest("这是摘要");
+			it.setFileid("http://weixin.uutime.cn/common/resources/images/logo_login.png");
+			it.setShow_cover_pic("1");
+			it.setSourceurl("");
+			it.setTitle("测试图文");
+			list.add(it);
+		}
+		String message = login.saveOrUpdateImageText(appMsgId, list);
+		System.out.println(message);
+	}
+	
+	public static void bindServer() {
 		String url = "http://weixin.uutime.cn/interface/communicate.action";
-		if (login.bindServer(url)) {
-			System.out.println("bind success!");
-		} else System.out.println("bind error!");
-		//send message
-		//String message = login.sendMessage(fakeId, "10000049", Constants.MESSAGE_PICTURE_TYPE);
-		//System.out.println(message);
-		/*
-		//get fans message
-		String message = login.getSources(99999999);
+		System.out.println(login.bindServer(url).toString());
+	}
+	
+	public static void sendMessageToAll() {
+		String message = login.sendMessageToAll("群发接口测试 ——此消息来自IDE，请勿回复",
+				Constant.TEXT_TYPE);
+		System.out.println(message);
+	}
+	
+	public static void sendMessageToSomeOne() {
+		String fakeId = "324178320";
+		String message = login.sendMessage(fakeId, "10000049", 
+				Constant.IMAGE_TEXT_TYPE);
+		System.out.println(message);
+	}
+	
+	public static void getImageSources(Integer begin, Integer count) {
+		String message = login.getSources(Constant.IMAGE_TYPE, begin, count);
 		JSONObject json = JSONObject.fromObject(message);
 		System.out.println(json);
-		*/
+		System.out.println(json.getJSONArray("file_item")
+				.getJSONObject(0).get("name"));
 		
-		// get message
+	}
+	
+	public static void getImageTextSources(Integer begin, Integer count) {
+		String message = login.getSources(Constant.IMAGE_TEXT_TYPE, begin, count);
+		JSONObject json = JSONObject.fromObject(message);
+		System.out.println(json);
+		System.out.println(json.getJSONArray("item")
+				.getJSONObject(0).get("title"));
+	}
+	
+	public static void getNewMessage() {
 		String retContent = login.getMessage(15, 7);
 		System.out.println("received content:\n" + retContent);
-		
-		/*
-		// get new message count
-		//newMsgCount = login.getNewMessageCount(lastMsgId);
-		//System.out.println("new message count: " + newMsgCount);
-		//System.out.println("lastMsgId: " + login.getLastMsgId());
-		// get head image
+	}
+	
+	public static void getNewMessageCount() {
+		String lastMsgId = "200497833";
+		Integer newMsgCount = login.getNewMessageCount(lastMsgId);
+		System.out.println("new message count: " + newMsgCount);
+		System.out.println("lastMsgId: " + login.getLastMsgId());
+	}
+	
+	public static void getReceivedImage() {
+		String picMsgId = "200588979";
+		String mode = "large";
+		String recImg = "D:\\recImg.jpg";
+		Boolean flag = login.getReceivedImage(picMsgId, mode, recImg);
+		if (flag)
+			System.out.println("get received image: ok");
+		else System.out.println("get received image: error");
+	}
+	
+	public static void getHeadImage() {
+		String fakeId = "324178320";
+		String headImg = "D:\\headImg.jpg";
 		Boolean flag = login.getHeadImage(fakeId, headImg);
 		if (flag)
 			System.out.println("get head image: ok");
 		else System.out.println("get head image: error");
-		// get received image
-		flag = login.getReceivedImage(picMsgId, mode, recImg);
-		if (flag)
-			System.out.println("get received image: ok");
-		else System.out.println("get received image: error");
-		*/
-		input.close();
 	}
 }

@@ -1,13 +1,6 @@
 package com.weixin.login.core;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Date;
-
-import javax.imageio.ImageIO;
 
 import net.sf.json.JSONObject;
 
@@ -15,44 +8,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import com.weixin.login.constant.Constant;
 import com.weixin.login.util.WeixinUtil;
 
 public class GetDatas extends Login {
 
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * 保存图片
-	 * @param pictureUrl
-	 * @param requestValue
-	 * @param savePath
-	 * @return
-	 */
-	protected boolean savePicture(String pictureUrl, String requestValue,
-			String savePath) {
-		if (!this.httpsRequest(pictureUrl, requestValue, POST, WeixinUtil.LOGIN_URL,
-				IMAGE_TIMEOUT))
-			return false;
-		try {
-			InputStream in = this.httpsUrlConn.getInputStream();
-			savePath = savePath.replace("\\", "/");
-			File file = new File(savePath);
-			String check = savePath.substring(0, savePath.lastIndexOf("/"));
-			File folder = new File(check);
-			if (!folder.exists())
-				folder.mkdirs();
-			FileOutputStream fout = new FileOutputStream(file);
-			BufferedImage image = ImageIO.read(in);
-			ImageIO.write(image, "png", fout);
-			fout.flush();
-			fout.close();
-			this.httpsUrlConn.disconnect();
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+	
 	
 	/**
 	 * 获取验证码（开放接口）
@@ -88,7 +51,7 @@ public class GetDatas extends Login {
 			String url = WeixinUtil.FANS_MESSAGE_URL.replace("[TOKEN]", this.token);
 			url = url.replace("[COUNT]", count.toString());
 			url = url.replace("[DAY]", day.toString());
-			if (!this.httpsRequest(url, null, GET, url, MESSAGE_TIMEOUT)) {
+			if (!this.httpsRequest(url, GET, url, MESSAGE_TIMEOUT)) {
 				System.out.println("request failed");
 				return null;
 			}
@@ -121,25 +84,43 @@ public class GetDatas extends Login {
 	 * get the message content which save in 
 	 * a object in the second script tag desc
 	 */
-	public String getSources(Integer count) {
+	public String getSources(Integer messageType, Integer begin,
+			Integer count) {
+		String url = null;
 		try {
-			String url = WeixinUtil.SOURCES_URL.replace("[TOKEN]", this.token);
-			url = url.replace("[COUNT]", count.toString());
-			if (!this.httpsRequest(url, null, GET, url, MESSAGE_TIMEOUT)) {
+			if (messageType.equals(Constant.IMAGE_TYPE))
+				url = WeixinUtil.IMAGE_SOURCES;
+			else if (messageType.equals(Constant.IMAGE_TEXT_TYPE))
+				url = WeixinUtil.IMAGE_TEXT_SOURCE;
+			url = url.replace("[COUNT]", count.toString())
+					.replace("[BEGIN]", begin.toString())
+					.replace("[TOKEN]", this.token);
+			if (!this.httpsRequest(url, GET, url, IMAGE_TIMEOUT)) {
 				System.out.println("request failed");
 				return null;
 			}
 			String content = this.dealConnection();
-			// get the fans message which save in a script tag
-			String beginStr = "wx.cgiData = ";
-			String endStr = ",\"is_upload_cdn";
+			// get the sources message which save in a script tag
+			// get ticket and ticket_id
+			String beginStr = "data:";
+			String endStr = "nick_name";
 			String message = WeixinUtil.weixinMessageRequest(content, 
+					beginStr, endStr, "script", 9);
+			message += "}";
+			message = message.replace(".join(\"\")", "");
+			JSONObject ticket = JSONObject.fromObject(message);
+			this.ticket = ticket.getString("ticket");
+			this.ticketId = ticket.getString("user_name");
+			
+			beginStr = "wx.cgiData = ";
+			endStr = "};";
+			message = WeixinUtil.weixinMessageRequest(content, 
 					beginStr, endStr, "script", 2);
 			message += "}";
 			return message;
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("get fans error");
+			System.out.println("get sources error");
 			return null;
 		}
 	}
@@ -180,7 +161,7 @@ public class GetDatas extends Login {
 			String url = WeixinUtil.NEW_MESSAGE_COUNT;
 			url = url.replace("[TOKEN]", this.token);
 			url = url.replace("[LASTMSGID]", lastMsgId);
-			if (!this.httpsRequest(url, null, GET, url, MESSAGE_TIMEOUT)) {
+			if (!this.httpsRequest(url, GET, url, MESSAGE_TIMEOUT)) {
 				System.out.println("failed");
 				return -1;
 			}
@@ -207,7 +188,7 @@ public class GetDatas extends Login {
 		try {
 			String url = WeixinUtil.FANS_URL.replace("[TOKEN]", this.token);
 			url = url.replace("[COUNT]", count.toString());
-			if (!this.httpsRequest(url, null, GET, url, MESSAGE_TIMEOUT)) {
+			if (!this.httpsRequest(url, GET, url, MESSAGE_TIMEOUT)) {
 				System.out.println("request failed");
 				return null;
 			}
