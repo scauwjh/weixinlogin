@@ -18,8 +18,11 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
+import net.sf.json.JSONObject;
+
 import com.sonalb.net.http.cookie.Client;
 import com.sonalb.net.http.cookie.CookieJar;
+import com.weixin.login.util.StringUtil;
 import com.weixin.login.util.TrustManager;
 import com.weixin.login.util.WeixinUtil;
 
@@ -81,11 +84,10 @@ public class Base implements Serializable {
 			httpsUrlConn.addRequestProperty("Host", "mp.weixin.qq.com");
 			httpsUrlConn.addRequestProperty("Connection", "keep-alive");
 			httpsUrlConn.addRequestProperty("Origin", "https://mp.weixin.qq.com");
-			String BOUNDARY = "----------GI3ei4cH2Ef1GI3cH2ae0ei4gL6Ef1";
+			String BOUNDARY = "----------" + System.currentTimeMillis();
 			if (filePath != null) {
-				httpsUrlConn.addRequestProperty("Content-Type",
+				httpsUrlConn.addRequestProperty("Content-Type", 
 						"multipart/form-data; boundary=" + BOUNDARY);
-				
 			}
 			// 如果cookie不为空，则设置cookie
 			if (cookie != null) {
@@ -100,22 +102,34 @@ public class Base implements Serializable {
 				if (requestStr != null)
 					out.write(requestStr.getBytes(ENCODER));
 				if (filePath != null) {
-					String payLoad = BOUNDARY + "\r\n" +
-							"Content-Disposition: form-data; name=\"file\"; " +
-							"filename=\"1.jpg\"\r\nContent-Type: application/octet-stream";
-					out.write(payLoad.getBytes(ENCODER));
-					DataInputStream data = new DataInputStream(
+					StringBuilder sb = new StringBuilder();  
+				    sb.append("--"); // 必须多两道线  
+				    sb.append(BOUNDARY);  
+				    sb.append("\r\n");  
+				    sb.append("Content-Disposition: form-data;name=\"file\";");
+				    sb.append("filename=\"")
+				    	.append(StringUtil.randString(9).toLowerCase())
+				    	.append(".jpg\"\r\n");
+				    sb.append("Content-Type:application/octet-stream\r\n\r\n"); 
+					out.write(sb.toString().getBytes(ENCODER));
+					
+					DataInputStream in = new DataInputStream(
 							new FileInputStream(filePath));
 					int length, count = 0;
 					byte[] inByte = new byte[10240];
-					while ((length = data.read(inByte) ) != -1) {
+					while ((length = in.read(inByte) ) != -1) {
 						out.write(inByte, 0, length);
 						count += length;
 					}
-					System.out.println("write " + count + " byte data Outputstream");
+					in.close();
+					String foot = "\r\n--" + BOUNDARY + "--\r\n";
+					out.write(foot.getBytes(ENCODER));
+					System.out.println("file size: " + count + " bytes");
 				}
 				out.flush();
 				out.close();
+				if (filePath != null)
+					return true;
 			}
 			// 登录new client 获取 cookie
 			if (client == null) {
@@ -184,7 +198,7 @@ public class Base implements Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("deal connection error");
-			return null;
+			return createMsg("-1", "deal connection error");
 		}
 	}
 	
@@ -219,6 +233,19 @@ public class Base implements Serializable {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	/**
+	 * 创建json返回信息
+	 * @param retCode
+	 * @param retMsg
+	 * @return
+	 */
+	protected String createMsg(String retCode, String retMsg) {
+		JSONObject json = new JSONObject();
+		json.put("ret", retCode);
+		json.put("msg", retMsg);
+		return json.toString();
 	}
 	
 	/* getter */

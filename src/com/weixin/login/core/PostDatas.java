@@ -23,8 +23,9 @@ public class PostDatas extends GetDatas {
 	public String sendMessage(String fakeId, String content, Integer messageType) {
 		try {
 			String url = WeixinUtil.SEND_MESSAGE;
-			String sendMessagePage = WeixinUtil.SEND_MESSAGE_PAGE.replace("[TOKEN]", this.token)
-								.replace("[FAKEID]", fakeId);
+			String sendMessagePage = WeixinUtil.SEND_MESSAGE_PAGE
+					.replace("[TOKEN]", this.token)
+					.replace("[FAKEID]", fakeId);
 			StringBuilder req = new StringBuilder();
 			req.append("type=").append(messageType)
 				.append("&tofakeid=").append(fakeId)
@@ -38,16 +39,13 @@ public class PostDatas extends GetDatas {
 				req.append("&app_id=").append(content)
 					.append("&appmsgid=").append(content);
 			}
-			if (!this.httpsRequest(url, req.toString(), POST,
-					sendMessagePage, TIMEOUT)) {
-				System.out.println("request failed");
-				return null;
-			}
+			this.httpsRequest(url, req.toString(), POST, 
+					sendMessagePage, TIMEOUT);
 			return this.dealConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("send message error");
-			return null;
+			return createMsg("-1", "send to one error");
 		}
 	}
 	
@@ -67,16 +65,12 @@ public class PostDatas extends GetDatas {
 				req.append("&app_id=").append(content)
 					.append("&appmsgid=").append(content);
 			}
-			if (!this.httpsRequest(url, req.toString(), POST,
-					url, TIMEOUT)) {
-				System.out.println("request failed");
-				return null;
-			}
+			this.httpsRequest(url, req.toString(), POST, url, TIMEOUT);
 			return this.dealConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("send message error");
-			return null;
+			return createMsg("-1", "send to all error");
 		}
 	}
 	
@@ -90,13 +84,8 @@ public class PostDatas extends GetDatas {
 		try {
 			// switch off the edit model
 			String req = "flag=0&type=1&token=" + this.token;
-			if (!this.httpsRequest(WeixinUtil.SWITCH_MODEL, req, POST,
-					WeixinUtil.SWITCH_MODEL , TIMEOUT)) {
-				System.out.println("request failed");
-				ret.put("ret", "-1");
-				ret.put("result", "failed to request: edit model");
-				return ret.toString();
-			}
+			this.httpsRequest(WeixinUtil.SWITCH_MODEL, req, POST,
+					WeixinUtil.SWITCH_MODEL , TIMEOUT);
 			String content = this.dealConnection();
 			System.out.println(content);
 			JSONObject json = JSONObject.fromObject(content);
@@ -106,13 +95,8 @@ public class PostDatas extends GetDatas {
 			}
 			// switch on the develop model
 			req = "flag=1&type=2&token=" + this.token;
-			if (!this.httpsRequest(WeixinUtil.SWITCH_MODEL, req, POST,
-					WeixinUtil.SWITCH_MODEL , TIMEOUT)){
-				System.out.println("request failed");
-				ret.put("ret", "-1");
-				ret.put("result", "failed to request: develop model");
-				return ret.toString();
-			}
+			this.httpsRequest(WeixinUtil.SWITCH_MODEL, req, POST,
+					WeixinUtil.SWITCH_MODEL , TIMEOUT);
 			content = this.dealConnection();
 			System.out.println(content);
 			json = JSONObject.fromObject(content);
@@ -125,13 +109,7 @@ public class PostDatas extends GetDatas {
 			String reqUrl = WeixinUtil.BIND_SERVER.replace("[TOKEN]", this.token);
 			String userToken = StringUtil.randString(6).toLowerCase();
 			req = "url=" + url + "&callback_token=" + userToken;
-			if(!this.httpsRequest(reqUrl, req, POST,
-					reqUrl, TIMEOUT)) {
-				System.out.println("request failed");
-				ret.put("ret", "-1");
-				ret.put("result", "failed to request: bind server");
-				return ret.toString();
-			}
+			this.httpsRequest(reqUrl, req, POST, reqUrl, TIMEOUT);
 			content = this.dealConnection();
 			System.out.println(content);
 			json = JSONObject.fromObject(content);
@@ -145,15 +123,12 @@ public class PostDatas extends GetDatas {
 			return ret.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			ret.put("ret", "-1");
-			ret.put("msg", "error");
-			return ret.toString();
+			return createMsg("-1", "bind server error");
 		}
 	}
 	
 	public String saveOrUpdateImageText(Long appMsgId, List<ImageText> list) {
 		String url = WeixinUtil.OPERATE_APPMSG;
-		JSONObject ret = new JSONObject();
 		try {
 			StringBuffer req = new StringBuffer("AppMsgId=");
 			if (appMsgId != null) {
@@ -183,38 +158,31 @@ public class PostDatas extends GetDatas {
 			req.append("&type=").append(Constant.IMAGE_TEXT_TYPE);
 			this.httpsRequest(url, req.toString(), POST, url, TIMEOUT);
 			JSONObject json = JSONObject.fromObject(this.dealConnection());
-			System.out.println("req: " + req);
+//			System.out.println("req: " + req);
 			return json.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("ERROR: 异常出错: create picture message");
-			ret.put("ret", "-1");
-			ret.put("msg", "error");
-			return ret.toString();
+			System.out.println("save or update image text error");
+			return createMsg("-1", "save or update image text error");
 		}
 	}
 	
-	public String uploadImage() {
+	public String uploadImage(String filePath) {
 		try {
 			this.getSources(Constant.IMAGE_TYPE, 0, 1);
 			String url = WeixinUtil.FILE_UPLOAD;
 			url = url.replace("[TOKEN]", this.token)
 					.replace("[TICKET]", this.ticket)
 					.replace("[TICKET_ID]", this.ticketId);
-			String tmp = "action=upload_material&f=json&ticket_id=[TICKET_ID]&ticket=[TICKET]&token=[TOKEN]&lang=zh_CN";
-			tmp = tmp.replace("[TOKEN]", this.token)
-					.replace("[TICKET]", this.ticket)
-					.replace("[TICKET_ID]", this.ticketId);
-//			System.out.println(tmp);
-			this.httpsRequest(url, tmp, "C:\\Users\\asus\\Pictures\\LifeFrame\\1.jpg",
-					POST, url, TIMEOUT);
+			this.httpsRequest(url, null, filePath, POST, url, TIMEOUT);
 			String content = this.dealConnection();
 			System.out.println(content);
+			return content;
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("upload image error");
+			return createMsg("-1", "upload image error");
 		}
-		return null;
 	}
 	
 }

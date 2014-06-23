@@ -73,7 +73,7 @@ public class GetDatas extends Login {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("get fans message error");
-			return null;
+			return createMsg("-1", "get fans message error");
 		}
 	}
 	
@@ -87,6 +87,7 @@ public class GetDatas extends Login {
 	public String getSources(Integer messageType, Integer begin,
 			Integer count) {
 		String url = null;
+		JSONObject json = new JSONObject();
 		try {
 			if (messageType.equals(Constant.IMAGE_TYPE))
 				url = WeixinUtil.IMAGE_SOURCES;
@@ -97,7 +98,9 @@ public class GetDatas extends Login {
 					.replace("[TOKEN]", this.token);
 			if (!this.httpsRequest(url, GET, url, IMAGE_TIMEOUT)) {
 				System.out.println("request failed");
-				return null;
+				json.put("ret", "-1");
+				json.put("msg", "request failed");
+				return json.toString();
 			}
 			String content = this.dealConnection();
 			// get the sources message which save in a script tag
@@ -121,7 +124,7 @@ public class GetDatas extends Login {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("get sources error");
-			return null;
+			return createMsg("-1", "get sources error");
 		}
 	}
 	

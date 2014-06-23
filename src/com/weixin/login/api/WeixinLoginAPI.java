@@ -133,7 +133,12 @@ public interface WeixinLoginAPI {
 	 */
 	public String saveOrUpdateImageText(Long appMsgId, List<ImageText> list);
 	
-	public String uploadImage();
+	/**
+	 * 上传图片
+	 * @param filePath
+	 * @return
+	 */
+	public String uploadImage(String filePath);
 	
 	//-------------------------------------------
 	//------------ getter or setter  ------------
