@@ -41,13 +41,18 @@ public class Base implements Serializable {
 	protected CookieJar cookie;
 	protected String token;
 	protected HttpsURLConnection httpsUrlConn;
-	protected String user;// 用户名
+	protected String user;// 用户名，登录的帐号，也就是邮箱
 	protected String password;// 用户密码
 	protected Integer errCode;// 登录返回码
 	protected Boolean loginStatus;// 登录标记
 	protected String lastMsgId;// 最后接收到的id
 	protected String ticket; // 上传图片用
 	protected String ticketId; // 上传图片用
+	
+	protected String originalId; // 原始ID
+	protected String weixinName; // 微信号
+	protected String weixinType; // 账户类型
+	protected String certification; // 认证情况
 	
 	public Base() {
 		this.loginStatus = false;

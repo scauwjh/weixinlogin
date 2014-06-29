@@ -204,7 +204,20 @@ public class GetDatas extends Login {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("get fans error");
+			return this.createMsg("-1", "get fans error");
+		}
+	}
+	
+	public String getAccountInformation() {
+		try{
+			String url = WeixinUtil.ACCOUNT_INFORMATION.replace("[TOKEN]", this.token);
+			
+			Jsoup.parse(html);
 			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("get information error");
+			return this.createMsg("-1", "get information error");
 		}
 	}
 
