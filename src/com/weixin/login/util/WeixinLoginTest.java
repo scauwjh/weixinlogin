@@ -47,6 +47,11 @@ public class WeixinLoginTest {
 			input.close();
 			return;
 		}
+		// get the account information
+		if (!login.getAccountInformation()) {
+			System.out.println("failed to get the account information");
+		}
+		
 		/*** to do some test ***/
 //		sendMessageToAll(Constant.IMAGE_TEXT_TYPE, "201131004");
 //		sendMessageToAll(Constant.TEXT_TYPE, "群发接口测试 ——此消息来自IDE，请勿回复");
@@ -54,9 +59,15 @@ public class WeixinLoginTest {
 //		getImageSources(0, 9999999);
 //		getImageTextSources(0, 9999999);
 //		saveImageText();
-		updateImageText(201131004L);
+//		updateImageText(201131004L);
+//		getImageSources(0, 9999999);
+		testAccountInformation();
 		
 		input.close();
+	}
+	
+	public static void testAccountInformation() {
+		System.out.println(login.getEmail());
 	}
 	
 	public static void uploadImage() {
@@ -107,7 +118,7 @@ public class WeixinLoginTest {
 	}
 	
 	public static void sendMessageToAll(Integer type, String content) {
-		String message = login.sendMessageToAll(content, type);
+		String message = login.massSendMessage(content, type, Constant.GROUP_ALL, Constant.SEX_ALL);
 		System.out.println(message);
 	}
 	

@@ -33,4 +33,9 @@ public class Constant {
 	public static final Integer I_IMAGE_TIMEOUT = 10000;
 	public static final Integer I_TIMEOUT = 5000;
 	
+	public static final Integer GROUP_ALL = -1;
+	
+	public static final Integer SEX_ALL = 0;
+	public static final Integer SEX_MALE = 1;
+	public static final Integer SEX_FEMALE = 2;
 }

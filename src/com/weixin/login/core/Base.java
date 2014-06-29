@@ -50,9 +50,11 @@ public class Base implements Serializable {
 	protected String ticketId; // 上传图片用
 	
 	protected String originalId; // 原始ID
-	protected String weixinName; // 微信号
+	protected String weixinAccount; // 微信号
+	protected String weixinName; // 微信名称
 	protected String weixinType; // 账户类型
 	protected String certification; // 认证情况
+	protected String email; // 邮箱，其实跟user一样的
 	
 	public Base() {
 		this.loginStatus = false;
@@ -267,5 +269,17 @@ public class Base implements Serializable {
 	public String getLastMsgId() { return lastMsgId; }
 	
 	public String getToken() { return this.token; }
+
+	public String getOriginalId() { return originalId; }
+	
+	public String getWeixinAccount() { return weixinAccount; }
+	
+	public String getWeixinName() { return weixinName; }
+	
+	public String getWeixinType() { return weixinType; }
+
+	public String getCertification() { return certification; }
+	
+	public String getEmail() { return email; }
 
 }
