@@ -62,7 +62,7 @@ public class Base implements Serializable {
 	 * @return
 	 */
 	protected boolean httpsRequest(String requestUrl, String requestStr, String filePath,
-			String method, String referer, Integer timeOut) {
+			String method, String referer, Integer timeOut, Boolean ifSetCookie) {
 		try {
 			// 创建SSLContext对象，并使用我们指定的信任管理器初始化
 			TrustManager[] tm = { new TrustManager() };
@@ -135,7 +135,8 @@ public class Base implements Serializable {
 			if (client == null) {
 				client = new Client();
 			}
-			cookie = client.getCookies(httpsUrlConn);
+			if (ifSetCookie)
+				cookie = client.getCookies(httpsUrlConn);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -154,8 +155,9 @@ public class Base implements Serializable {
 	 * @return
 	 */
 	protected boolean httpsRequest(String requestUrl, String requestStr,
-			String method, String referer, Integer timeOut) {
-		return this.httpsRequest(requestUrl, requestStr, null, method, referer, timeOut);
+			String method, String referer, Integer timeOut, Boolean ifSetCookie) {
+		return this.httpsRequest(requestUrl, requestStr, null, method, 
+				referer, timeOut, ifSetCookie);
 	}
 	
 	/**
@@ -167,8 +169,9 @@ public class Base implements Serializable {
 	 * @return
 	 */
 	protected boolean httpsRequest(String requestUrl, String method,
-			String referer, Integer timeOut) {
-		return this.httpsRequest(requestUrl, null, null, method, referer, timeOut);
+			String referer, Integer timeOut, Boolean ifSetCookie) {
+		return this.httpsRequest(requestUrl, null, null, method, 
+				referer, timeOut, ifSetCookie);
 	}
 
 	/**
@@ -212,7 +215,7 @@ public class Base implements Serializable {
 	protected boolean savePicture(String pictureUrl, String requestValue,
 			String savePath) {
 		if (!this.httpsRequest(pictureUrl, requestValue, POST, WeixinUtil.LOGIN_URL,
-				IMAGE_TIMEOUT))
+				IMAGE_TIMEOUT, false))
 			return false;
 		try {
 			InputStream in = this.httpsUrlConn.getInputStream();

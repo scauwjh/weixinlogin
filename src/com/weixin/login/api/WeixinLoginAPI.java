@@ -120,7 +120,7 @@ public interface WeixinLoginAPI {
 	/**
 	 * 绑定服务器
 	 * @param url 自己服务器跟微信交互的接口
-	 * @return
+	 * @return token
 	 */
 	public String bindServer(String url);
 	

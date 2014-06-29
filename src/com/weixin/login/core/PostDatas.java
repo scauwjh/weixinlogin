@@ -40,7 +40,7 @@ public class PostDatas extends GetDatas {
 					.append("&appmsgid=").append(content);
 			}
 			this.httpsRequest(url, req.toString(), POST, 
-					sendMessagePage, TIMEOUT);
+					sendMessagePage, TIMEOUT, true);
 			return this.dealConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,7 +65,7 @@ public class PostDatas extends GetDatas {
 				req.append("&app_id=").append(content)
 					.append("&appmsgid=").append(content);
 			}
-			this.httpsRequest(url, req.toString(), POST, url, TIMEOUT);
+			this.httpsRequest(url, req.toString(), POST, url, TIMEOUT, true);
 			return this.dealConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,7 +85,7 @@ public class PostDatas extends GetDatas {
 			// switch off the edit model
 			String req = "flag=0&type=1&token=" + this.token;
 			this.httpsRequest(WeixinUtil.SWITCH_MODEL, req, POST,
-					WeixinUtil.SWITCH_MODEL , TIMEOUT);
+					WeixinUtil.SWITCH_MODEL , TIMEOUT, true);
 			String content = this.dealConnection();
 			System.out.println(content);
 			JSONObject json = JSONObject.fromObject(content);
@@ -96,7 +96,7 @@ public class PostDatas extends GetDatas {
 			// switch on the develop model
 			req = "flag=1&type=2&token=" + this.token;
 			this.httpsRequest(WeixinUtil.SWITCH_MODEL, req, POST,
-					WeixinUtil.SWITCH_MODEL , TIMEOUT);
+					WeixinUtil.SWITCH_MODEL , TIMEOUT, true);
 			content = this.dealConnection();
 			System.out.println(content);
 			json = JSONObject.fromObject(content);
@@ -109,7 +109,7 @@ public class PostDatas extends GetDatas {
 			String reqUrl = WeixinUtil.BIND_SERVER.replace("[TOKEN]", this.token);
 			String userToken = StringUtil.randString(6).toLowerCase();
 			req = "url=" + url + "&callback_token=" + userToken;
-			this.httpsRequest(reqUrl, req, POST, reqUrl, TIMEOUT);
+			this.httpsRequest(reqUrl, req, POST, reqUrl, TIMEOUT, true);
 			content = this.dealConnection();
 			System.out.println(content);
 			json = JSONObject.fromObject(content);
@@ -156,7 +156,7 @@ public class PostDatas extends GetDatas {
 			req.append("&token=").append(this.token);
 			req.append("&vid=&ajax=1&lang=zh_CN&f=json&t=ajax-response&random=0.6692259708600666");
 			req.append("&type=").append(Constant.IMAGE_TEXT_TYPE);
-			this.httpsRequest(url, req.toString(), POST, url, TIMEOUT);
+			this.httpsRequest(url, req.toString(), POST, url, TIMEOUT, true);
 			JSONObject json = JSONObject.fromObject(this.dealConnection());
 //			System.out.println("req: " + req);
 			return json.toString();
@@ -174,7 +174,7 @@ public class PostDatas extends GetDatas {
 			url = url.replace("[TOKEN]", this.token)
 					.replace("[TICKET]", this.ticket)
 					.replace("[TICKET_ID]", this.ticketId);
-			this.httpsRequest(url, null, filePath, POST, url, TIMEOUT);
+			this.httpsRequest(url, null, filePath, POST, url, TIMEOUT, true);
 			String content = this.dealConnection();
 			System.out.println(content);
 			return content;

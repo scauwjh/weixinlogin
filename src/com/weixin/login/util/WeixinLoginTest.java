@@ -54,9 +54,16 @@ public class WeixinLoginTest {
 //		getImageSources(0, 9999999);
 //		getImageTextSources(0, 9999999);
 //		saveImageText();
-		updateImageText(201131004L);
-		
+//		updateImageText(201131004L);
+		getFans();
+//		getMessage();
+//		sendMessageToSomeOne();
+		sendMessageToAll(Constant.IMAGE_TEXT_TYPE, "201131004");
 		input.close();
+	}
+	
+	public static void getMessage() {
+		System.out.println(login.getMessage(9999, 1000));
 	}
 	
 	public static void uploadImage() {
@@ -149,7 +156,7 @@ public class WeixinLoginTest {
 	
 	public static void getReceivedImage() {
 		String picMsgId = "200588979";
-		String mode = "large";
+		String mode = "large"; //small
 		String recImg = "D:\\recImg.jpg";
 		Boolean flag = login.getReceivedImage(picMsgId, mode, recImg);
 		if (flag)
@@ -164,5 +171,9 @@ public class WeixinLoginTest {
 		if (flag)
 			System.out.println("get head image: ok");
 		else System.out.println("get head image: error");
+	}
+	
+	public static void getFans() {
+		System.out.println(login.getFans(99999));
 	}
 }

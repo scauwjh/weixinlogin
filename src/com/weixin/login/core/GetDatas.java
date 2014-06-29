@@ -51,7 +51,7 @@ public class GetDatas extends Login {
 			String url = WeixinUtil.FANS_MESSAGE_URL.replace("[TOKEN]", this.token);
 			url = url.replace("[COUNT]", count.toString());
 			url = url.replace("[DAY]", day.toString());
-			if (!this.httpsRequest(url, GET, url, MESSAGE_TIMEOUT)) {
+			if (!this.httpsRequest(url, GET, url, MESSAGE_TIMEOUT, true)) {
 				System.out.println("request failed");
 				return null;
 			}
@@ -96,7 +96,7 @@ public class GetDatas extends Login {
 			url = url.replace("[COUNT]", count.toString())
 					.replace("[BEGIN]", begin.toString())
 					.replace("[TOKEN]", this.token);
-			if (!this.httpsRequest(url, GET, url, IMAGE_TIMEOUT)) {
+			if (!this.httpsRequest(url, GET, url, IMAGE_TIMEOUT, true)) {
 				System.out.println("request failed");
 				json.put("ret", "-1");
 				json.put("msg", "request failed");
@@ -164,7 +164,7 @@ public class GetDatas extends Login {
 			String url = WeixinUtil.NEW_MESSAGE_COUNT;
 			url = url.replace("[TOKEN]", this.token);
 			url = url.replace("[LASTMSGID]", lastMsgId);
-			if (!this.httpsRequest(url, GET, url, MESSAGE_TIMEOUT)) {
+			if (!this.httpsRequest(url, GET, url, MESSAGE_TIMEOUT, true)) {
 				System.out.println("failed");
 				return -1;
 			}
@@ -191,10 +191,7 @@ public class GetDatas extends Login {
 		try {
 			String url = WeixinUtil.FANS_URL.replace("[TOKEN]", this.token);
 			url = url.replace("[COUNT]", count.toString());
-			if (!this.httpsRequest(url, GET, url, MESSAGE_TIMEOUT)) {
-				System.out.println("request failed");
-				return null;
-			}
+			this.httpsRequest(url, GET, url, MESSAGE_TIMEOUT, false);
 			String content = this.dealConnection();
 			// get the fans message which save in a script tag
 			String beginStr = "groupsList : (";

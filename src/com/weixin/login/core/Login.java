@@ -27,7 +27,7 @@ public class Login extends Base {
 		loginSb.append("&f=json");
 		// 发出请求
 		if (!this.httpsRequest(WeixinUtil.LOGIN_URL, loginSb.toString(), POST, WeixinUtil.LOGIN_URL,
-				MESSAGE_TIMEOUT)) {
+				MESSAGE_TIMEOUT, true)) {
 			System.out.println("登录失败");
 			return -1;
 		}
