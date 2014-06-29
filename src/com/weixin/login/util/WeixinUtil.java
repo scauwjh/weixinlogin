@@ -34,6 +34,9 @@ public class WeixinUtil {
 	public static final String IMAGE_TEXT_SOURCE = "https://mp.weixin.qq.com/cgi-bin/appmsg?begin=[BEGIN]&count=[COUNT]&t=media/appmsg_list&type=10&action=list&token=[TOKEN]&lang=zh_CN";
 	// 文件上传 [TICKET_ID] [TICKET] [TOKEN]
 	public static final String FILE_UPLOAD = "https://mp.weixin.qq.com/cgi-bin/filetransfer?action=upload_material&f=json&ticket_id=[TICKET_ID]&ticket=[TICKET]&token=[TOKEN]&lang=zh_CN";
+	// 账户信息
+	public static final String ACCOUNT_INFORMATION = "https://mp.weixin.qq.com/cgi-bin/settingpage?t=setting/index&action=index&token=[TOKEN]&lang=zh_CN";
+	
 	
 	/**
 	 * @param content

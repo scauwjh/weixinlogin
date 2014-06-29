@@ -201,7 +201,28 @@ public class GetDatas extends Login {
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("get fans error");
-			return null;
+			return this.createMsg("-1", "get fans error");
+		}
+	}
+	
+	public Boolean getAccountInformation() {
+		try{
+			String url = WeixinUtil.ACCOUNT_INFORMATION.replace("[TOKEN]", this.token);
+			this.httpsRequest(url, GET, url, TIMEOUT, true);
+			String html = this.dealConnection();
+			Document doc = Jsoup.parse(html);
+			Elements elements = doc.getElementsByClass("meta_content");
+			this.weixinAccount = elements.get(1).html().trim();
+			this.email = elements.get(2).html().trim();
+			this.originalId = elements.get(3).child(0).html().trim();
+			this.weixinName = elements.get(4).child(0).html().trim();
+			this.weixinType = elements.get(6).html().trim();
+			this.certification = elements.get(7).html().trim();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("get information error");
+			return false;
 		}
 	}
 

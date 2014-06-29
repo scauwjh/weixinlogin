@@ -50,12 +50,14 @@ public class PostDatas extends GetDatas {
 	}
 	
 	
-	public String sendMessageToAll(String content, Integer messageType) {
+	public String massSendMessage(String content, Integer messageType, 
+			Integer groupId, Integer sex) {
 		try {
 			String url = WeixinUtil.MASS_MESSAGE;
 			StringBuilder req = new StringBuilder();
 			req.append("type=").append(messageType)
-				.append("&groupid=-1")
+				.append("&groupid=").append(groupId)
+				.append("&sex=").append(sex)
 				.append("&token=").append(this.token)
 				.append("&lang=zh_CN&random=&f=json&ajax=1&t=ajax-response");
 			// send content

@@ -91,6 +91,12 @@ public interface WeixinLoginAPI {
 	 */
 	public Boolean getHeadImage(String fakeId, String savePath);
 	
+	/**
+	 * 获取用户信息
+	 * @return
+	 */
+	public Boolean getAccountInformation();
+	
 	
 	
 	//-------------------------------------------
@@ -113,9 +119,13 @@ public interface WeixinLoginAPI {
 	 * <p>如果提示需要绑定公众号，请提醒用户手动去微信公众平台绑定</p>
 	 * @param content
 	 * @param messageType
+	 * @param groupId (-1 is all)
+	 * @param sex (0 is all, 1 is male, 2 is female,
+	 *  please use Constant.SEX_ALL etc)
 	 * @return
 	 */
-	public String sendMessageToAll(String content, Integer messageType);
+	public String massSendMessage(String content, Integer messageType,
+			Integer groupId, Integer sex);
 	
 	/**
 	 * 绑定服务器
@@ -156,5 +166,17 @@ public interface WeixinLoginAPI {
 	public String getLastMsgId();
 	
 	public String getToken();
+	
+	public String getOriginalId();
+	
+	public String getWeixinAccount();
+	
+	public String getWeixinName();
+	
+	public String getWeixinType();
+
+	public String getCertification();
+	
+	public String getEmail();
 	
 }
